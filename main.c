@@ -35,13 +35,13 @@ int main(int argc, char **argv){
                 mvl(outFile, 1);
                 break;
             case '[':
-                fprintf(outFile, "while(*(cells+cell_ptr)!=0){\n");
+                fprintf(outFile, "while(*cells!=0){\n");
                 break;
             case ']':
                 fprintf(outFile, "}\n");
                 break;
             case '.':
-                fprintf(outFile, "putc(*(cells+cell_ptr), stdout);\n");
+                fprintf(outFile, "putc(*cells, stdout);\n");
                 break;
             case ',':
                 handle_input(outFile);
