@@ -5,8 +5,8 @@ void initCFile(FILE *file){
     fprintf(file, "int main(int argc, char **argv){\n");
     fprintf(file, "++argv;\n");
     fprintf(file, "char *cells=malloc(30000);\n");
-    fprintf(file, "char *c_end=cells+29999;\n");
-    fprintf(file, "char *c_start=cells;\n");
+    fprintf(file, "void *c_end=cells+29999;\n");
+    fprintf(file, "void *c_start=cells;\n");
 }
 
 void finalizeCFile(FILE *file){
