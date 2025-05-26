@@ -2,9 +2,10 @@
 
 void initCFile(FILE *file){
     fprintf(file, "#include <stdio.h>\n#include <stdlib.h>\n");
+    fprintf(file, "#include <stdint.h>\n");
     fprintf(file, "int main(int argc, char **argv){\n");
     fprintf(file, "++argv;\n");
-    fprintf(file, "char *cells=malloc(30000);\n");
+    fprintf(file, "uint8_t *cells=malloc(30000);\n");
     fprintf(file, "void *c_end=cells+29999;\n");
     fprintf(file, "void *c_start=cells;\n");
 }
@@ -25,13 +26,11 @@ void dec(FILE *file,int value){
 }
 
 void mvr(FILE *file,int value){
-    fprintf(file, "if(cells==c_end){cells-=29999;}");
-    fprintf(file, "else{cells+=%i;}\n",value);
+    fprintf(file, "cells+=%i;\n",value);
 }
 
 void mvl(FILE *file,int value){
-    fprintf(file, "if(cells==c_start){cells+=29999;}");
-    fprintf(file, "else{cells-=%i;}\n",value);
+    fprintf(file, "cells-=%i;\n",value);
 }
 
 void handle_input(FILE *file){
