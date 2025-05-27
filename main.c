@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "cfile.h"
+#include <stdint.h>
 
 int main(int argc, char **argv){
     if(argc<3){
@@ -11,40 +12,53 @@ int main(int argc, char **argv){
         exit(1);
     }
 
+
     FILE *f = fopen(argv[1], "r");
     FILE *outFile = fopen(argv[2], "w");
     initCFile(outFile);
 
-    uint32_t count = 0;
-    uint8_t shouldExit = 0;
     char curchar=1;
+
+    int lcount=0;
     
     while(curchar!=EOF){
 	curchar = fgetc(f);
         switch(curchar){
             case '+':
-                inc(outFile, 1);
+                inc(outFile);
                 break;
             case '-':
-                dec(outFile, 1);
+                dec(outFile);
                 break;
             case '>':
-                mvr(outFile, 1);
+                mvr(outFile);
                 break;
             case '<':
-                mvl(outFile, 1);
+                mvl(outFile);
                 break;
             case '[':
-                fprintf(outFile, "while(*cells!=0){\n");
+		fprintf(outFile, "cmp byte [r9], 0\n");
+		fprintf(outFile, "jz le%d\n",lcount);
+		fprintf(outFile, "jmp ls%d\n",lcount);
+		fprintf(outFile, "ls%d:\n",lcount);
+		lcount++;
                 break;
             case ']':
-                fprintf(outFile, "}\n");
+                lcount--;
+		fprintf(outFile, "cmp byte [r9], 0\n");
+		fprintf(outFile, "jz le%d\n",lcount);
+		fprintf(outFile, "jmp ls%d\n",lcount);
+		fprintf(outFile, "le%d:\n",lcount);
                 break;
             case '.':
-                fprintf(outFile, "putc(*cells, stdout);\n");
+                fprintf(outFile, "mov rax, 1\n");
+		fprintf(outFile, "mov rdi, 1\n");
+		fprintf(outFile, "mov rsi, r9\n");
+		fprintf(outFile, "mov rdx, 1\n");
+		fprintf(outFile, "syscall\n");
                 break;
             case ',':
-                handle_input(outFile);
+                //handle_input(outFile);
                 break;
         }
     }
