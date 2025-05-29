@@ -27,20 +27,41 @@ int main(int argc, char **argv){
     rewind(f);
     curchar=0;
 	lcount=0;
+    int i;
     while(curchar!=EOF){
 	curchar = fgetc(f);
         switch(curchar){
             case '+':
-                inc(outFile);
+                i=1;
+                while(*f->_IO_read_ptr=='+'){
+                    i++;
+                    f->_IO_read_ptr++;
+                }
+                inc(outFile, i);
                 break;
             case '-':
-                dec(outFile);
+                i=1;
+                while(*f->_IO_read_ptr=='-'){
+                    i++;
+                    f->_IO_read_ptr++;
+                }
+                dec(outFile, i);
                 break;
             case '>':
-                mvr(outFile);
+                i=1;
+                while(*f->_IO_read_ptr=='>'){
+                    i++;
+                    f->_IO_read_ptr++;
+                }
+                mvr(outFile, i);
                 break;
             case '<':
-                mvl(outFile);
+                i=1;
+                while(*f->_IO_read_ptr=='<'){
+                    i++;
+                    f->_IO_read_ptr++;
+                }
+                mvl(outFile, i);
                 break;
             case '[':
 				lcount++;
@@ -48,13 +69,11 @@ int main(int argc, char **argv){
 				lstack++;
 		        fprintf(outFile, "cmp byte [r9], 0\n");
 		        fprintf(outFile, "jz le%d\n",*(lstack-1));
-		        fprintf(outFile, "jmp ls%d\n",*(lstack-1));
 		        fprintf(outFile, "ls%d:\n",*(lstack-1));
                 break;
             case ']':
 		        fprintf(outFile, "cmp byte [r9], 0\n");
-		        fprintf(outFile, "jz le%d\n",*(lstack-1));
-		        fprintf(outFile, "jmp ls%d\n",*(lstack-1));
+		        fprintf(outFile, "jnz ls%d\n",*(lstack-1));
 		        fprintf(outFile, "le%d:\n",*(lstack-1));
 				lstack--;
                 break;

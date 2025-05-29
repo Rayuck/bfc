@@ -13,20 +13,20 @@ void finalizeCFile(FILE *file){
     fprintf(file, "syscall\n");
 }
 
-void inc(FILE *file){
-    fprintf(file, "inc byte [r9]\n");
+void inc(FILE *file, int value){
+    fprintf(file, "add byte [r9], %d\n", value);
 }
 
-void dec(FILE *file){
-    fprintf(file, "dec byte [r9]\n");
+void dec(FILE *file, int value){
+    fprintf(file, "sub byte [r9], %d\n", value);
 }
 
-void mvr(FILE *file){
-    fprintf(file, "inc r9\n");
+void mvr(FILE *file, int value){
+    fprintf(file, "add r9, %d\n", value);
 }
 
-void mvl(FILE *file){
-    fprintf(file, "dec r9\n");
+void mvl(FILE *file, int value){
+    fprintf(file, "sub r9, %d\n", value);
 }
 
 /*
