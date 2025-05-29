@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 void initCFile(FILE *file){
-    fprintf(file, "section .data\narray db 30000 dup(0)\n");
+    fprintf(file, "section .data\narray times 30000 db 0\n");
     fprintf(file, "section .text\nglobal _start\n");
     fprintf(file, "_start:\n");
     fprintf(file, "mov r9, array\n");

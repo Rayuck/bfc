@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include "cfile.h"
-#include <stdint.h>
 
 int main(int argc, char **argv){
     if(argc<3){
@@ -17,10 +15,18 @@ int main(int argc, char **argv){
     FILE *outFile = fopen(argv[2], "w");
     initCFile(outFile);
 
-    char curchar=1;
+    char curchar=0;
 
     int lcount=0;
-    
+    while(curchar!=EOF){
+        curchar = fgetc(f);
+        if(curchar=='[') lcount++;
+        else if (curchar==']') lcount++;
+    }
+    int *lstack = malloc(sizeof(int)*lcount);
+    rewind(f);
+    curchar=0;
+	lcount=0;
     while(curchar!=EOF){
 	curchar = fgetc(f);
         switch(curchar){
@@ -37,25 +43,27 @@ int main(int argc, char **argv){
                 mvl(outFile);
                 break;
             case '[':
-		fprintf(outFile, "cmp byte [r9], 0\n");
-		fprintf(outFile, "jz le%d\n",lcount);
-		fprintf(outFile, "jmp ls%d\n",lcount);
-		fprintf(outFile, "ls%d:\n",lcount);
-		lcount++;
+				lcount++;
+				*lstack = lcount;
+				lstack++;
+		        fprintf(outFile, "cmp byte [r9], 0\n");
+		        fprintf(outFile, "jz le%d\n",*(lstack-1));
+		        fprintf(outFile, "jmp ls%d\n",*(lstack-1));
+		        fprintf(outFile, "ls%d:\n",*(lstack-1));
                 break;
             case ']':
-                lcount--;
-		fprintf(outFile, "cmp byte [r9], 0\n");
-		fprintf(outFile, "jz le%d\n",lcount);
-		fprintf(outFile, "jmp ls%d\n",lcount);
-		fprintf(outFile, "le%d:\n",lcount);
+		        fprintf(outFile, "cmp byte [r9], 0\n");
+		        fprintf(outFile, "jz le%d\n",*(lstack-1));
+		        fprintf(outFile, "jmp ls%d\n",*(lstack-1));
+		        fprintf(outFile, "le%d:\n",*(lstack-1));
+				lstack--;
                 break;
             case '.':
                 fprintf(outFile, "mov rax, 1\n");
-		fprintf(outFile, "mov rdi, 1\n");
-		fprintf(outFile, "mov rsi, r9\n");
-		fprintf(outFile, "mov rdx, 1\n");
-		fprintf(outFile, "syscall\n");
+		        fprintf(outFile, "mov rdi, 1\n");
+		        fprintf(outFile, "mov rsi, r9\n");
+		        fprintf(outFile, "mov rdx, 1\n");
+		        fprintf(outFile, "syscall\n");
                 break;
             case ',':
                 //handle_input(outFile);
@@ -65,8 +73,8 @@ int main(int argc, char **argv){
 
     finalizeCFile(outFile);
     fclose(outFile);
-    
     fclose(f);
+    free(lstack);
 
 
     return 0;
