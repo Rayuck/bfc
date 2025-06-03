@@ -64,6 +64,14 @@ int main(int argc, char **argv){
                 mvl(outFile, i);
                 break;
             case '[':
+                if(
+                    *f->_IO_read_ptr=='-'&&
+                    *(f->_IO_read_ptr+1)==']'
+                    ){
+                        fprintf(outFile, "mov byte [r9], 0\n");
+                        f->_IO_read_ptr+=2;
+                        break;
+                    }
 				lcount++;
 				*lstack = lcount;
 				lstack++;
