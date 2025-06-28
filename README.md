@@ -19,3 +19,5 @@ A small Brainfuck compiler written in pure C.
 ### Debian
 
 ```sudo apt-get install nasm```
+
+-# btw you will die if you use this
