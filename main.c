@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "assembly.c"
+#include "extra.c"
 
 
 int main(int argc, char **argv){
-
     FILE *f = fopen(*(argv+1), "r");
+    printf("%s Opening %s%s\n", SUCCESS, *(argv+1), DEFAULT);
 
     fseek(f, 0, SEEK_END);
     int fsize = ftell(f);
@@ -53,14 +55,19 @@ int main(int argc, char **argv){
         }
     }
     fclose(f);
-    FILE *asmF = fopen("main.asm", "w");
-
+    printf("%s Read file to Buf%s\n", SUCCESS, DEFAULT);
+    char asmFile[1024] = "";
+    strcat(asmFile, *(argv+2));
+    strcat(asmFile, ".asm");
+    FILE *asmF = fopen(asmFile, "w");
+    
     int *stack=malloc(sizeof(int)*512);
     int stackIndex=0;
     int loopCount=0;
-
+    
     init(asmF);
-
+    
+    printf("%s Writing %s%s\n", SUCCESS, *(argv+2) , DEFAULT);
     for(int i=0;i<bfSize;i++){
         switch(*(bfContent+i)){
             case '+': {
@@ -172,5 +179,10 @@ int main(int argc, char **argv){
 
     free(stack);
     free(bfContent);
+    printf("%s Generating build.sh %s.asm%s\n", SUCCESS, *(argv+2), DEFAULT);
+    genBuildScript();
+
+    printf("%s Finished writing %s.asm%s\n", SUCCESS, *(argv+2), DEFAULT);
+
     return 0;
 }

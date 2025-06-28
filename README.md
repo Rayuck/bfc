@@ -7,6 +7,7 @@ A small Brainfuck compiler written in pure C.
 - Input is **not** yet implemented.
 - Few optimizations.
 - Only compiles Brainfuck to x86_64 (Linux) assembly.
+- Doesn't assemble or link the output file (bc lazy :>)
 
 ## Usage
 
@@ -19,5 +20,3 @@ A small Brainfuck compiler written in pure C.
 ### Debian
 
 ```sudo apt-get install nasm```
-
--# btw you will die if you use this
