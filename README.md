@@ -12,3 +12,10 @@ A small Brainfuck compiler written in pure C.
 
 ```bfc input.bf output.asm```
 
+## Requirements
+### Arch based systems
+```sudo pacman -S nasm```
+
+### Debian
+
+```sudo apt-get install nasm```
