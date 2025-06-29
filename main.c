@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "assembly.c"
-#include "extra.c"
+#include "extras/extra.c"
 
 
 int main(int argc, char **argv){
@@ -71,10 +71,6 @@ int main(int argc, char **argv){
     for(int i=0;i<bfSize;i++){
         switch(*(bfContent+i)){
             case '+': {
-                if(*(bfContent+i-1)=='['&&*(bfContent+i+1)==']'){
-                    fprintf(asmF, "mov byte [r9], 0\n");
-                    break;
-                }
                 if(*(bfContent+i+1)=='+'){
                     int j=0;
                     while(*(bfContent+i+j)=='+'){
@@ -92,10 +88,6 @@ int main(int argc, char **argv){
                 
 
             case '-': {
-                if(*(bfContent+i-1)=='['&&*(bfContent+i+1)==']'){
-                    fprintf(asmF, "mov byte [r9], 0\n");
-                    break;
-                }
                 if(*(bfContent+i+1)=='-'){
                     int j=0;
                     while(*(bfContent+i+j)=='-'){
@@ -153,6 +145,11 @@ int main(int argc, char **argv){
             }
             
             case '[': {
+                if((*(bfContent+i+1)=='+' || *(bfContent+i+1)=='-')&&*(bfContent+i+2)==']'){
+                    fprintf(asmF, "mov byte [r9], 0\n");
+                    i+=2;
+                    break;
+                }
                 stackIndex++;
                 *(stack+stackIndex) = loopCount;
                 fprintf(asmF, "cmp byte [r9], 0\n");
@@ -179,8 +176,8 @@ int main(int argc, char **argv){
 
     free(stack);
     free(bfContent);
-    printf("%s Generating build.sh %s.asm%s\n", SUCCESS, *(argv+2), DEFAULT);
-    genBuildScript();
+    printf("%s Generating build.sh%s\n", SUCCESS, DEFAULT);
+    genBuildScript(*(argv+2));
 
     printf("%s Finished writing %s.asm%s\n", SUCCESS, *(argv+2), DEFAULT);
 

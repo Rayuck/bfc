@@ -17,9 +17,12 @@ void finish(FILE *f){
     fprintf(f, "syscall");
 }
 
-void genBuildScript(){
+void genBuildScript(const char* outname){
     FILE *f = fopen("build.sh", "wr");
-    fprintf(f, "nasm *.asm -f elf64\nld *.o");
+    fprintf(f,
+        "nasm %s.asm -f elf64\nld %s.o -o %s",
+        outname, outname, outname
+    );
     fclose(f);
 }
 
