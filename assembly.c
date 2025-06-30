@@ -20,9 +20,10 @@ void finish(FILE *f){
 void genBuildScript(const char* outname){
     FILE *f = fopen("build.sh", "wr");
     fprintf(f,
-        "nasm %s.asm -f elf64\nld %s.o -o %s",
+        "nasm %s.asm -f elf64\nld %s.o -o %s\n",
         outname, outname, outname
     );
+    fprintf(f, "rm %s.asm %s.o", outname, outname);
     fclose(f);
 }
 
