@@ -6,6 +6,7 @@
 
 
 int main(int argc, char **argv){
+    if(argc!=3){printf("invalid syntax");return 1;}
     FILE *f = fopen(*(argv+1), "r");
     printf("%s Opening %s%s\n", SUCCESS, *(argv+1), DEFAULT);
 
